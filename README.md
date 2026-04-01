@@ -37,3 +37,7 @@
 1. Bu depoyu klonlayın / *Clone this repository*:
    ```bash
    git clone [https://github.com/kullaniciadi/Reflex7.git](https://github.com/kullaniciadi/Reflex7.git)
+
+
+Bu proje bir fikir üzerine 1 saat içinde hayata geçirilmiştir.
+This project was brought to life in 1 hour based on a unique idea.

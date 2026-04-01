@@ -40,9 +40,9 @@
 
    index.html dosyasını tarayıcınızda açın / Open index.html in your browser.
 
-👨‍💻 Geliştirici / Developer
+👨‍💻 Geliştirici / Developer :
 Tunahan Kara
 
-Bu proje internette gezinirken gördüğüm bir oyundan ilham alınarak fikir üzerine 2 saat içinde hayata geçirilmiştir.
+Bu proje internette gezinirken gördüğüm bir oyundan ilham alarak fikir üzerine 2 saat içinde hayata geçirdiğim bir projedir.
 
 Reflex7: Hızlı düşün, doğru bas! / Think fast, click right!

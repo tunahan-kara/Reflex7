@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflex7 - Elite Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+        <div id="stage">
+            <div id="mode-selection">
+                <h1 class="logo">Reflex7</h1>
+                <p>Hızını Seç:</p>
+                <div id="high-score-display">En Yüksek: Level <span id="best-level">0</span></div>
+                <button class="mode-btn yavas" data-time="7.0">YAVAŞ (7sn)</button>
+                <button class="mode-btn hizli" data-time="4.0">HIZLI (4sn)</button>
+            </div>
+
+            <div id="play-area">
+                <div id="ui-top">
+                    <div class="ui-item">LEVEL: <span id="level-count">1</span></div>
+                </div>
+                <div class="button-wrapper">
+                    <svg class="timer-svg" viewBox="0 0 100 100">
+                        <circle class="timer-background" cx="50" cy="50" r="48"></circle>
+                        <circle id="timer-bar" cx="50" cy="50" r="48"></circle>
+                    </svg>
+                    <button id="main-button">
+                        <div id="instruction">BAŞLA</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-over-screen">
+        <div class="stats-box">
+            <h1>ELENDİN!</h1>
+            <p id="fail-message">...</p>
+            <div class="stats">
+                <p>Level: <b id="final-level">0</b></p>
+                <p>Süre: <b id="total-time">0</b>sn</p>
+            </div>
+            <button id="retry-button">Tekrar Dene</button>
+        </div>
+    </div>
+
+    <audio id="click-sound" src="assets/click.mp3"></audio>
+    <script src="script.js"></script>
+</body>
+</html>

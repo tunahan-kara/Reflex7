@@ -5,145 +5,127 @@ let baseTime = 7.0;
 let timeLeft = 7.0;
 let timerInterval;
 let gameActive = false;
-let startTime;
-let pendingTask = null;
+let nickname = "";
 
+const stage = document.getElementById('stage');
+const nicknameInput = document.getElementById('nickname-input');
 const mainButton = document.getElementById('main-button');
 const instructionText = document.getElementById('instruction');
-const levelCount = document.getElementById('level-count');
-const timerBar = document.getElementById('timer-bar');
-const stage = document.getElementById('stage');
-const modeSelection = document.getElementById('mode-selection');
 
-// REKORU YÜKLE
+// REKORU GÖSTER
 document.getElementById('best-level').innerText = localStorage.getItem('reflex7_best') || 0;
 
-// MOD SEÇİMİ VE BAŞLATMA
 document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
+        const nick = nicknameInput.value.trim();
+        nickname = nick === "" ? "OYUNCU-Z" : nick.toUpperCase();
         baseTime = parseFloat(e.target.dataset.time);
-        modeSelection.classList.add('hide');
-        stage.classList.add('centered');
-        setTimeout(startGame, 800);
+        stage.classList.add('is-playing');
+        setTimeout(() => { startGame(); }, 800);
     });
 });
 
 function startGame() {
-    level = 1; 
-    gameActive = true; 
-    startTime = Date.now(); 
-    nextLevel();
+    level = 1; gameActive = true; nextLevel();
 }
 
 function nextLevel() {
     clearInterval(timerInterval);
     currentClicks = 0;
-    
-    // Her 5 seviyede bir oyun hızlanır (Dinamik Hızlanma)
-    const speedFactor = Math.max(0.5, 1 - (Math.floor(level/5) * 0.05));
-    timeLeft = baseTime * speedFactor;
-    
-    levelCount.innerText = level;
-
-    if (pendingTask) {
-        setTask(pendingTask);
-        pendingTask = null;
-    } else {
-        generateMegaTask();
-    }
+    // Her 5 levelda bir hız %5 artar
+    const speed = Math.max(0.4, 1 - (Math.floor(level/5) * 0.05));
+    timeLeft = baseTime * speed;
+    document.getElementById('level-count').innerText = level;
+    generateMegaTask(); // Yeni nesil görev üretici
     startTimer();
-}
-
-function setTask(task) {
-    instructionText.innerHTML = task.trapHtml || task.text;
-    targetClicks = task.target;
-    mainButton.style.backgroundColor = task.color || "#4CAF50";
 }
 
 function generateMegaTask() {
     const r = Math.random();
+    mainButton.style.backgroundColor = "#4CAF50"; // Varsayılan Yeşil
+    mainButton.style.color = "white";
     
-    // 1. MATEMATİK VE NEGATİF TUZAĞI
-    if (r < 0.30) {
-        let n1 = Math.floor(Math.random() * 10) + 1;
-        let n2 = Math.floor(Math.random() * 15) - 5;
-        let n3 = Math.floor(Math.random() * 5);
-        
-        let result = n1 - n2 + n3;
-        let formula = `${n1} - (${n2}) + ${n3}`;
-
-        if (result <= 0) {
-            // Sonuç negatif veya 0 ise kural: 2 kez bas
-            setTask({ text: `${formula}<br>Sonuç ≤ 0 ise 2 kez bas!`, target: 2, color: "#9c27b0" });
-        } else {
-            setTask({ text: `${formula}<br>kere bas!`, target: result });
-        }
-    } 
-    // 2. HAFIZA
-    else if (r < 0.45) {
-        const nextVal = Math.floor(Math.random() * 3) + 2;
-        pendingTask = { text: `Şimdi ${nextVal} kere bas!`, target: nextVal };
-        setTask({ text: "SABRET!<br>Bir sonrakini bekle.", target: 0, color: "#ff9800" });
-    }
-    // 3. RENK / MANTIK
-    else if (r < 0.60) {
-        const trapType = Math.random() > 0.5;
-        if (trapType) {
-            setTask({ text: "Buton KIRMIZI ise<br>ASLA basma", target: 0, color: "#f44336" });
-        } else {
-            setTask({ text: "Yazı beyazsa<br>1 kez dokun", target: 1, color: "#2196F3" });
-        }
-    }
-    // 4. KELİME ANALİZİ
-    else if (r < 0.75) {
-        const words = ["REFLEX", "ZAMAN", "BUTON", "DİKKAT", "HIZLI", "ODAK"];
-        const word = words[Math.floor(Math.random()*words.length)];
-        setTask({ text: `'${word}' kelimesindeki<br>harf sayısı kadar bas`, target: word.length });
-    }
-    // 5. GÖRSEL TUZAKLAR
-    else if (r < 0.90) {
-        const visuals = [
-            { h: "🐱<br>Kedi ise basma!", t: 0 },
-            { h: "🦁<br>Aslan ise 3 bas!", t: 3 },
-            { h: "🍎<br>Elma ise 1 bas!", t: 1 }
+    // 1. RENK TUZAĞI (Stroop Etkisi)
+    if (r < 0.20) {
+        const colors = [
+            { name: "KIRMIZI", code: "#f44336", count: 7 },
+            { name: "MAVİ", code: "#2196F3", count: 4 },
+            { name: "SARI", code: "#ffeb3b", count: 4 }
         ];
-        const v = visuals[Math.floor(Math.random()*visuals.length)];
-        setTask({ trapHtml: v.h, target: v.t });
+        const pick = colors[Math.floor(Math.random() * colors.length)];
+        mainButton.style.backgroundColor = pick.code;
+        if (pick.name === "KIRMIZI") {
+            targetClicks = 0;
+            instructionText.innerHTML = "RENK KIRMIZI!<br>SAKIN BASMA!";
+        } else {
+            targetClicks = 1;
+            instructionText.innerHTML = "RENK MAVİ/SARI İSE<br>1 KEZ DOKUN";
+        }
     }
+    // 2. MATEMATİK VE NEGATİF OYUNU
+    else if (r < 0.40) {
+        let n1 = Math.floor(Math.random() * 12) + 2;
+        let n2 = Math.floor(Math.random() * 10);
+        let res = n1 - n2;
+        if (res <= 0) {
+            targetClicks = 2;
+            instructionText.innerHTML = `${n1} - ${n2} ≤ 0 ise<br>2 KEZ BAS!`;
+        } else {
+            targetClicks = res;
+            instructionText.innerHTML = `${n1} - ${n2}<br>kere bas!`;
+        }
+    }
+    // 3. SEVİYE BAZLI (ÇİFT/TEK) - YENİ!
+    else if (r < 0.60) {
+        if (level % 2 === 0) {
+            targetClicks = 2;
+            instructionText.innerHTML = `LEVEL ÇİFT!<br>2 KEZ BAS`;
+        } else {
+            targetClicks = 1;
+            instructionText.innerHTML = `LEVEL TEK!<br>1 KEZ BAS`;
+        }
+    }
+    // 4. KELİME VE HARF ANALİZİ
+    else if (r < 0.80) {
+        const words = ["ODAK", "HIZ", "DİKKAT", "REFLEX", "ZAMAN"];
+        const word = words[Math.floor(Math.random()*words.length)];
+        targetClicks = word.length;
+        instructionText.innerHTML = `'${word}' kelimesindeki<br>harf sayısı kadar bas`;
+    }
+    // 5. GÖRSEL TUZAK (Emoji)
     else {
-        setTask({ text: "Acele et!<br>4 kere bas!", target: 4 });
+        const icons = [
+            { img: "💣", task: "BOMBA! BASMA!", t: 0 },
+            { img: "⚡", task: "YILDIRIM! 3 BAS!", t: 3 },
+            { img: "🎯", task: "HEDEF! 1 BAS!", t: 1 }
+        ];
+        const pick = icons[Math.floor(Math.random() * icons.length)];
+        targetClicks = pick.t;
+        instructionText.innerHTML = `${pick.img}<br>${pick.task}`;
+        if (pick.t === 0) mainButton.style.backgroundColor = "#333";
     }
 }
 
 function startTimer() {
-    const totalDash = 301.6;
-    const currentBase = timeLeft; // O anki level süresi
-    
+    const bar = document.getElementById('timer-bar');
+    const base = timeLeft;
     timerInterval = setInterval(() => {
         timeLeft -= 0.05;
-        const offset = totalDash - (timeLeft / currentBase) * totalDash;
-        timerBar.style.strokeDashoffset = offset;
-
+        bar.style.strokeDashoffset = 301.6 - (timeLeft / base) * 301.6;
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             if (targetClicks === 0) { level++; nextLevel(); }
-            else { gameOver("Süre Bitti!<br>Çok yavaşsın."); }
+            else { gameOver("Süre Bitti!"); }
         }
     }, 50);
 }
 
 mainButton.addEventListener('click', () => {
     if (!gameActive) return;
-    
     currentClicks++;
     
-    // YANLIŞ BASIŞTA EKRANI SALLA
     if (targetClicks === 0 || (currentClicks > targetClicks)) {
-        document.body.classList.add('shake');
-        setTimeout(() => document.body.classList.remove('shake'), 400);
-        
-        let msg = targetClicks === 0 ? "Basma demiştim!" : "Fazla bastın!";
-        gameOver(msg);
+        gameOver(targetClicks === 0 ? "Basmaman gerekiyordu!" : "Fazla bastın!");
         return;
     }
     
@@ -156,18 +138,16 @@ mainButton.addEventListener('click', () => {
 function gameOver(msg) {
     gameActive = false;
     clearInterval(timerInterval);
-    
-    // REKOR KONTROLÜ
     const best = localStorage.getItem('reflex7_best') || 0;
-    if (level > best) {
-        localStorage.setItem('reflex7_best', level);
-    }
-
-    const totalTime = Math.floor((Date.now() - startTime) / 1000);
-    document.getElementById('fail-message').innerHTML = msg;
+    if (level > best) localStorage.setItem('reflex7_best', level);
+    
+    document.getElementById('fail-message').innerText = msg;
     document.getElementById('final-level').innerText = level;
-    document.getElementById('total-time').innerText = totalTime;
     document.getElementById('game-over-screen').classList.add('active');
+    
+    document.getElementById('final-score-details').innerText = `${nickname}: LEVEL ${level}`;
+    document.getElementById('leaderboard-status-modal').classList.add('active');
 }
 
-document.getElementById('retry-button').onclick = () => { location.reload(); };
+document.getElementById('retry-button').onclick = () => location.reload();
+document.getElementById('close-modal-button').onclick = () => document.getElementById('leaderboard-status-modal').classList.remove('active');

@@ -37,3 +37,12 @@
 1. Bu depoyu klonlayın / *Clone this repository*:
    ```bash
    git clone [https://github.com/tunahan-kara/Reflex7.git](https://github.com/tunahan-kara/Reflex7.git)
+
+   index.html dosyasını tarayıcınızda açın / Open index.html in your browser.
+
+👨‍💻 Geliştirici / Developer
+Tunahan Kara
+
+Bu proje internette gezinirken gördüğüm bir oyundan ilham alınarak fikir üzerine 2 saat içinde hayata geçirilmiştir.
+
+Reflex7: Hızlı düşün, doğru bas! / Think fast, click right!

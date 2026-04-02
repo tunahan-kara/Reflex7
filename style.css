@@ -60,6 +60,14 @@ body {
     font-weight: bold; outline: none; transition: 0.3s;
 }
 
+
+#instruction { 
+    pointer-events: none; 
+    line-height: 1.4; 
+    font-size: 1.1rem; 
+    transition: color 0.3s ease;
+}
+
 .mode-btn {
     width: 260px; padding: 18px; margin: 10px 0; border: none; border-radius: 15px;
     font-weight: bold; font-size: 1.1rem; cursor: pointer; color: white; transition: 0.3s;

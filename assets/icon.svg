@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Reflex7</title>
+  <rect width="512" height="512" rx="88" fill="#050805"/>
+  <rect x="28" y="28" width="456" height="456" rx="66" fill="none" stroke="#4caf50" stroke-width="12"/>
+  <path d="M98 126h205c62 0 103 33 103 88 0 41-24 70-67 82l66 92h-88l-57-82h-72v82H98zm90 69v45h104c19 0 29-8 29-23 0-14-10-22-29-22z" fill="#ecfff0"/>
+  <path d="M293 331h102l-73 103h-90z" fill="#4caf50"/>
+  <path d="M345 315l56-77h-92z" fill="#ffeb3b" opacity=".9"/>
+</svg>

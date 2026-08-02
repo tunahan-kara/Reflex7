@@ -2,67 +2,145 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reflex7 - Elite Edition v0.6</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#050805">
+    <meta name="application-version" content="v1.1.0">
+    <meta name="description" content="Reflex7, reflekslerini, dikkatini ve hızlı karar verme becerini sınayan sinir bozucu ama adil bir retro tarayıcı oyunudur.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Reflex7 v1.1.0">
+    <meta property="og:description" content="Hızlı düşün. Talimatı dikkatle oku. Doğru bas.">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:image" content="assets/icon.svg">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Reflex7 v1.1.0">
+    <meta name="twitter:description" content="An irritating but fair retro reflex game.">
+    <!-- Replace this reserved placeholder with the final absolute production URL before launch. -->
+    <link rel="canonical" href="https://example.invalid/reflex7/">
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+    <link rel="manifest" href="manifest.webmanifest">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <title>Reflex7 v1.1.0</title>
 </head>
 <body>
-
+    <div id="crt-overlay" aria-hidden="true"></div>
     <div id="game-container">
-        <div id="bg-overlay"></div> 
+        <div id="bg-overlay"></div>
 
         <div id="stage">
-            <div id="mode-selection">
-                <h1 class="logo">Reflex7</h1>
-                
-                <div id="selection-content">
-                    <div id="high-score-display">En Yüksek: Level <span id="best-level">0</span></div>
-                    <p class="nickname-prompt">Sıralamaya girmek için takma adını gir ve hızını seç:</p>
-                    
-                    <div class="input-wrapper">
-                        <label for="nickname-input">NICKNAME:</label>
-                        <input type="text" id="nickname-input" placeholder="ÖR: ALFA-Z" maxlength="12">
+            <section id="mode-selection" aria-labelledby="wordmark-title">
+                <header class="brand-lockup">
+                    <h1 class="wordmark" id="wordmark-title"><span>REFLEX</span><b>7</b></h1>
+                    <p class="brand-tagline" data-i18n="brand.tagline"></p>
+                </header>
+
+                <div id="selection-content" class="terminal-panel">
+                    <div class="menu-toolbar">
+                        <div class="language-selector" role="group" data-i18n-aria-label="menu.languageSelector">
+                            <button type="button" class="language-btn" data-language="tr" data-i18n-aria-label="menu.turkish">TR</button>
+                            <span aria-hidden="true">/</span>
+                            <button type="button" class="language-btn" data-language="en" data-i18n-aria-label="menu.english">EN</button>
+                        </div>
+                        <button type="button" class="icon-control sound-toggle" data-i18n-aria-label="audio.toggle"></button>
                     </div>
 
-                    <button class="mode-btn yavas" data-time="7.0">YAVAŞ (7sn)</button>
-                    <button class="mode-btn hizli" data-time="4.0">HIZLI (4sn)</button>
-                </div>
-            </div>
+                    <div id="high-score-display" aria-live="polite"></div>
+                    <p class="nickname-prompt" data-i18n="menu.nicknamePrompt"></p>
+                    <div class="input-wrapper">
+                        <label for="nickname-input" data-i18n="menu.nicknameLabel"></label>
+                        <input type="text" id="nickname-input" data-i18n-placeholder="menu.nicknamePlaceholder" maxlength="12" autocomplete="nickname">
+                    </div>
 
-            <div id="play-area">
-                <div id="level-display">LEVEL: <span id="level-count">1</span></div>
+                    <button type="button" class="mode-btn yavas" data-time="7.0" data-i18n="menu.slowMode"></button>
+                    <button type="button" class="mode-btn hizli" data-time="4.0" data-i18n="menu.fastMode"></button>
+                    <button type="button" id="how-to-button" class="text-control" data-i18n="onboarding.howToButton"></button>
+
+                    <section id="how-to-panel" hidden>
+                        <h2 data-i18n="onboarding.title"></h2>
+                        <p data-i18n="onboarding.body"></p>
+                        <ul>
+                            <li data-i18n="onboarding.instructions"></li>
+                            <li data-i18n="onboarding.controls"></li>
+                            <li data-i18n="onboarding.local"></li>
+                        </ul>
+                        <button type="button" id="how-to-close" class="text-control" data-i18n="common.close"></button>
+                    </section>
+                </div>
+            </section>
+
+            <main id="play-area">
+                <div id="announcement" role="status" aria-live="polite"></div>
+                <div id="gameplay-indicators" aria-live="polite">
+                    <span id="global-rule-badge"></span>
+                    <span id="modifier-indicator"></span>
+                </div>
+                <div id="session-hud">
+                    <span id="level-display"></span>
+                    <span id="score-display"></span>
+                    <span id="combo-display"></span>
+                    <button type="button" id="pause-button" class="icon-control" data-i18n-aria-label="pause.button"></button>
+                </div>
                 <div class="button-wrapper">
-                    <svg class="timer-svg" viewBox="0 0 100 100">
+                    <svg class="timer-svg" viewBox="0 0 100 100" aria-hidden="true">
                         <circle class="timer-background" cx="50" cy="50" r="48"></circle>
                         <circle id="timer-bar" cx="50" cy="50" r="48"></circle>
                     </svg>
-                    <button id="main-button">
-                        <div id="instruction">BAŞLA</div>
-                    </button>
+                    <button type="button" id="main-button"><span id="instruction"></span></button>
+                    <div id="arena-instruction"></div>
+                    <div id="decoy-instruction"></div>
+                    <div id="sequence-container"></div>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 
-    <div id="game-over-screen">
-        <div class="stats-box">
-            <h1>ELENDİN!</h1>
-            <p id="fail-message">...</p>
-            <div class="stats">
-                <p>Level: <b id="final-level">0</b></p>
-                <p>Süre: <b id="total-time">0</b>sn</p>
-            </div>
-            <button id="retry-button">Tekrar Dene</button>
+    <div id="first-run-tip" class="screen-overlay" role="dialog" aria-modal="true" aria-labelledby="first-tip-title">
+        <div class="terminal-dialog" tabindex="-1">
+            <h2 id="first-tip-title" data-i18n="onboarding.tipTitle"></h2>
+            <p data-i18n="onboarding.tipBody"></p>
+            <button type="button" id="dismiss-tip" class="primary-action" data-i18n="onboarding.tipDismiss"></button>
         </div>
     </div>
 
-    <div id="leaderboard-status-modal">
-        <div class="modal-content">
-            <span id="txt-global-success">SKORUNUZ KÜRESEL LİSTEYE MÜHÜRLENDİ!</span>
-            <p id="final-score-details"></p>
-            <p class="construction">Firebase entegrasyonu devam ediyor. Skorunuz Orca defterine kaydedildi.</p>
-            <button id="close-modal-button">TAMAM</button>
+    <div id="pause-screen" class="screen-overlay" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+        <div class="terminal-dialog" tabindex="-1">
+            <h2 id="pause-title" data-i18n="pause.title"></h2>
+            <p data-i18n="pause.body"></p>
+            <button type="button" id="resume-button" class="primary-action" data-i18n="pause.resume"></button>
+            <button type="button" id="pause-menu-button" class="secondary-action" data-i18n="result.menu"></button>
+        </div>
+    </div>
+
+    <div id="game-over-screen" class="screen-overlay" role="dialog" aria-modal="true" aria-labelledby="game-over-title">
+        <div class="result-panel" tabindex="-1">
+            <p class="result-kicker" data-i18n="result.sessionEnded"></p>
+            <h1 id="game-over-title" data-i18n="result.title"></h1>
+            <p id="fail-message"></p>
+            <p id="sarcasm-message"></p>
+            <div class="result-grid">
+                <p id="result-player-stat"></p>
+                <p id="final-level-stat"></p><p id="final-score-stat"></p>
+                <p id="best-level-stat"></p><p id="best-score-stat"></p>
+                <p id="total-time-stat"></p><p id="highest-combo-stat"></p>
+            </div>
+            <div class="failure-context">
+                <p id="failed-task-stat"></p>
+                <p id="failed-context-stat"></p>
+            </div>
+            <div id="new-best-result" aria-live="polite"></div>
+            <div class="result-actions">
+                <button type="button" id="retry-button" class="primary-action" data-i18n="result.retry"></button>
+                <button type="button" id="menu-button" class="secondary-action" data-i18n="result.menu"></button>
+            </div>
+            <div class="result-preferences">
+                <div class="language-selector result-language" role="group" data-i18n-aria-label="menu.languageSelector">
+                    <button type="button" class="language-btn" data-language="tr" data-i18n-aria-label="menu.turkish">TR</button>
+                    <span aria-hidden="true">/</span>
+                    <button type="button" class="language-btn" data-language="en" data-i18n-aria-label="menu.english">EN</button>
+                </div>
+                <button type="button" class="text-control sound-toggle" data-i18n-aria-label="audio.toggle"></button>
+            </div>
         </div>
     </div>
 

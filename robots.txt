@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-# Add the final absolute sitemap URL after a production domain is assigned.
+Sitemap: https://reflex7.pages.dev/sitemap.xml

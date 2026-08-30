@@ -1,4 +1,4 @@
-const CACHE_NAME = 'reflex7-v1.1.0-r2';
+const CACHE_NAME = 'reflex7-v1.1.0-r3';
 const CORE_ASSETS = [
     './',
     './index.html',

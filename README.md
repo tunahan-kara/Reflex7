@@ -14,7 +14,7 @@ The game is designed to feel frustrating without becoming arbitrary: valid input
 
 ## Features
 
-- 22 registered task mechanics with weighted selection and repeat protection
+- 34 registered task mechanics with weighted selection and repeat protection
 - Progressive level-based difficulty in 7-second and 4-second modes
 - Deceptive but solvable instructions, visual decoys, and anticipation tasks
 - Six difficulty modifiers and five temporary multi-round global rules
@@ -103,7 +103,7 @@ node tests/task-engine.test.js
 git diff --check
 ```
 
-The existing harness validates all 22 task mechanics, translation parity, task selection, timing feasibility, modifiers, global rules, input isolation, pause/resume behavior, retry cleanup, scoring, combo state, local record migration, storage fallback, audio channel behavior, PWA assets, reduced-motion rules, and DOM references.
+The existing harness validates all 34 task mechanics, translation parity, task selection, timing feasibility, modifiers, global rules, input isolation, pause/resume behavior, retry cleanup, scoring, combo state, local record migration, storage fallback, audio channel behavior, PWA assets, reduced-motion rules, and DOM references.
 
 ## Deployment
 

@@ -53,9 +53,28 @@ input {
 }
 
 button:focus-visible,
-input:focus-visible {
+input:focus-visible,
+a:focus-visible {
     outline: 3px solid #ffeb3b;
     outline-offset: 4px;
+}
+
+.privacy-link {
+    display: block;
+    width: max-content;
+    margin: 12px auto 0;
+    color: #80cbc4;
+    font-family: "VT323", monospace;
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    opacity: 0.82;
+}
+
+.privacy-link:hover {
+    color: #ffeb3b;
+    text-decoration: underline;
+    opacity: 1;
 }
 
 #game-container {
@@ -528,6 +547,59 @@ body.shake {
     gap: clamp(7px, 2.5vw, 12px);
     padding: 62px 10px 34px;
     pointer-events: auto;
+}
+
+.choice-grid.has-visual-board {
+    padding-top: 130px;
+    padding-bottom: 20px;
+    gap: 5px;
+}
+
+.task-visual-board {
+    position: absolute;
+    z-index: 32;
+    top: 55px;
+    left: 8%;
+    width: 84%;
+    min-height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(5px, 2vw, 10px);
+    padding: 6px;
+    border: 1px solid rgba(139, 195, 74, 0.6);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.84);
+    pointer-events: none;
+}
+
+.attribute-collection {
+    flex-wrap: wrap;
+}
+
+.attribute-item {
+    min-width: 24px;
+    font-size: clamp(1.25rem, 6vw, 2rem);
+    line-height: 1;
+    text-align: center;
+    text-shadow: 0 1px 2px black;
+}
+
+.direction-board {
+    justify-content: flex-start;
+    border-style: dashed;
+    color: white;
+    font-size: clamp(2.8rem, 13vw, 4.6rem);
+    line-height: 1;
+}
+
+.direction-board.position-left { justify-content: flex-start; }
+.direction-board.position-right { justify-content: flex-end; }
+.direction-board.position-up { align-items: flex-start; }
+.direction-board.position-down { align-items: flex-end; }
+
+.answer-position-change {
+    animation: instruction-change-flash 240ms ease-out 1;
 }
 
 .task-choice {
@@ -1157,6 +1229,10 @@ body.cursor-decoy #play-area::after {
     .moving-control-0,
     .moving-control-1,
     .shrinking-control {
+        animation: none;
+    }
+
+    .answer-position-change {
         animation: none;
     }
 }

@@ -161,16 +161,24 @@ function createEnvironment(options = {}) {
             keys: () => ({ tr: Object.keys(translations.tr), en: Object.keys(translations.en) }),
             registry: () => TASK_REGISTRY,
             records: () => JSON.parse(JSON.stringify(modeRecords)),
-            state: () => ({ level, sessionScore, combo, highestCombo, gameActive, gameplayPaused, selectedMode, activeModifiers: [...activeModifiers], activeGlobalRule, taskHistory: [...taskHistory], transitionLocked: inputTransitionLocked, soundEnabled, tipSeen, discoveries: [...storedDiscoveries] }),
+            state: () => ({ level, sessionScore, combo, highestCombo, gameActive, gameplayPaused, selectedMode, activeModifiers: [...activeModifiers], activeGlobalRule, taskHistory: [...taskHistory], taskMemory: JSON.parse(JSON.stringify(taskMemory)), transitionLocked: inputTransitionLocked, soundEnabled, tipSeen, discoveries: [...storedDiscoveries] }),
             setState: (state) => {
                 level = state.level ?? level; timeLeft = state.duration ?? timeLeft; timerDuration = state.timerDuration ?? timerDuration;
                 taskHistory = state.tasks ? [...state.tasks] : []; categoryHistory = state.categories ? [...state.categories] : [];
-                taskMemory = state.memory ? { ...state.memory } : {}; activeGlobalRule = state.rule === undefined ? activeGlobalRule : state.rule;
+                taskMemory = state.memory ? { completed: [], pendingRecall: null, ...state.memory } : freshTaskMemory();
+                completedTaskCount = state.completed ?? completedTaskCount;
+                activeGlobalRule = state.rule === undefined ? activeGlobalRule : state.rule;
             },
             weights: () => getTaskCandidateWeights().map(({ id, category, selectionWeight, rules, modifiers }) => ({ id, category, selectionWeight, rules, modifiers })),
-            selectMany: (count, seed) => {
+            selectMany: (count, seed, scenarioLevel = 50) => {
                 let value = seed >>> 0; Math.random = () => ((value = ((value * 1664525) + 1013904223) >>> 0) / 4294967296);
-                taskHistory = []; categoryHistory = []; activeGlobalRule = null; taskMemory = { previousTarget: 4 }; level = 50; timeLeft = 2;
+                taskHistory = []; categoryHistory = []; activeGlobalRule = null;
+                taskMemory = { ...freshTaskMemory(), previousTarget: 4, completed: [
+                    { item: '7', color: 'color.red', side: 'left', parity: 'odd' },
+                    { item: '3', color: 'color.blue', side: 'right', parity: 'odd' },
+                    { item: '◆', color: 'color.green', side: 'left', parity: 'even' }
+                ] };
+                level = scenarioLevel; timeLeft = 2;
                 const selected = [];
                 for (let index = 0; index < count; index += 1) { const task = selectTaskDefinition(); selected.push(task.id); rememberSelection(task); }
                 return selected;
@@ -181,13 +189,62 @@ function createEnvironment(options = {}) {
             },
             instantiate: (id, randomValue = 0.4, overrides = {}) => {
                 const definition = TASK_REGISTRY.find((task) => task.id === id); Math.random = () => randomValue;
-                level = overrides.level ?? Math.max(1, definition.minLevel); timeLeft = overrides.duration ?? definition.minDuration; taskMemory = { previousTarget: 4 };
-                gameActive = true; gameplayPaused = false; inputTransitionLocked = false; activeGlobalRule = null;
+                level = overrides.level ?? Math.max(1, definition.minLevel); timeLeft = overrides.duration ?? definition.minDuration;
+                taskMemory = overrides.memory || { ...freshTaskMemory(), previousTarget: 4, completed: [
+                    { item: '7', color: 'color.red', side: 'left', parity: 'odd' },
+                    { item: '3', color: 'color.blue', side: 'right', parity: 'odd' },
+                    { item: '7', color: 'color.green', side: 'left', parity: 'odd' }
+                ] };
+                completedTaskCount = overrides.completed ?? 30;
+                gameActive = true; gameplayPaused = false; inputTransitionLocked = false; activeGlobalRule = overrides.rule || null;
                 const task = definition.create(); activeTaskObj = task; task.setup();
                 const timeoutMaximum = task._trackedTimeouts ? Math.max(0, ...[...task._trackedTimeouts].map((record) => record.remaining)) : 0;
                 const choices = typeof task.getModifierTargets === 'function' ? task.getModifierTargets() : [];
                 const result = { task, definition, timeoutMaximum, choiceCount: choices.length, correctCount: choices.filter((choice) => choice.dataset.correct === 'true').length };
                 task.cleanup(); gameActive = false; activeTaskObj = null; return result;
+            },
+            exercise: (id, correct = true, overrides = {}) => {
+                const definition = TASK_REGISTRY.find((entry) => entry.id === id);
+                let value = (overrides.seed ?? 918273) >>> 0;
+                Math.random = () => ((value = ((value * 1664525) + 1013904223) >>> 0) / 4294967296);
+                level = overrides.level ?? Math.max(30, definition.minLevel); timeLeft = overrides.duration ?? Math.max(2, definition.minDuration);
+                taskMemory = overrides.memory || { ...freshTaskMemory(), previousTarget: 7, completed: [
+                    { item: '7', color: 'color.red', side: 'left', parity: 'odd' },
+                    { item: '3', color: 'color.blue', side: 'right', parity: 'odd' },
+                    { item: '7', color: 'color.green', side: 'left', parity: 'odd' }
+                ] };
+                completedTaskCount = overrides.completed ?? 30;
+                activeGlobalRule = overrides.rule ? { id: overrides.rule, remaining: 2, nameKey: 'rule.' + overrides.rule } : null;
+                gameActive = true; gameplayPaused = false; inputTransitionLocked = false;
+                const originalSuccess = taskSuccess, originalFail = taskFail; let outcome = null;
+                taskSuccess = () => { outcome = 'success'; };
+                taskFail = (key) => { outcome = 'failure:' + key; };
+                const task = definition.create(); activeTaskObj = task; task.setup();
+                const beforeOrder = task.grid ? task.grid.children.map((child) => child.textContent).join('|') : '';
+                [...(task._trackedTimeouts || [])].sort((a, b) => a.remaining - b.remaining).forEach((record) => {
+                    if (!outcome) record.callback();
+                });
+                const targets = typeof task.getModifierTargets === 'function' ? task.getModifierTargets() : [];
+                if (!outcome && id === 'reverseSequence' && correct) {
+                    task.sequence.forEach((expected) => targets.find((button) => button.textContent === expected)?.dispatch('click'));
+                } else if (!outcome && targets.length) {
+                    const target = targets.find((button) => button.dataset.correct === String(correct));
+                    target?.dispatch('click');
+                }
+                const snapshot = {
+                    outcome, answer: task.answer, depth: task.depth, item: task.item, cue: task.cue, gap: task.gap,
+                    finalRule: task.finalRule, initialRule: task.initialRule, switchDelay: task.switchDelay,
+                    target: task.target, items: task.items, remaining: task.remaining, original: task.original,
+                    sequence: task.sequence, expression: task.expression, actual: task.actual, claimed: task.claimed, statementTrue: task.statementTrue,
+                    arrow: task.arrow, position: task.position, followArrow: task.followArrow,
+                    targetColor: task.targetColor?.css, targetSymbol: task.targetShape?.symbol,
+                    choiceCount: targets.length, correctCount: targets.filter((button) => button.dataset.correct === 'true').length,
+                    beforeOrder, afterOrder: task.grid ? task.grid.children.map((child) => child.textContent).join('|') : '',
+                    correctLabel: targets.find((button) => button.dataset.correct === 'true')?.textContent,
+                    memory: typeof task.getMemory === 'function' ? task.getMemory() : {}
+                };
+                task.cleanup(); taskSuccess = originalSuccess; taskFail = originalFail;
+                gameActive = false; activeTaskObj = null; activeGlobalRule = null; return snapshot;
             },
             gateScenario: (id, randomValue = 0.4) => {
                 const definition = TASK_REGISTRY.find((task) => task.id === id); Math.random = () => randomValue;
@@ -221,6 +278,11 @@ function createEnvironment(options = {}) {
                 const definition = TASK_REGISTRY.find((task) => task.id === id); const originalFail = taskFail; let failureKey = null;
                 taskFail = (key) => { failureKey = key; };
                 level = Math.max(10, definition.minLevel); timeLeft = Math.max(2, definition.minDuration); activeGlobalRule = null;
+                taskMemory = { ...freshTaskMemory(), previousTarget: 7, completed: [
+                    { item: '7', color: 'color.red', side: 'left', parity: 'odd' },
+                    { item: '3', color: 'color.blue', side: 'right', parity: 'odd' },
+                    { item: '◆', color: 'color.green', side: 'left', parity: 'even' }
+                ] };
                 gameActive = true; gameplayPaused = false; inputTransitionLocked = false;
                 const task = definition.create(); activeTaskObj = task; task.setup(); task.onTimeUp(); task.cleanup();
                 const pendingAfterCleanup = task._trackedTimeouts?.size || 0;
@@ -265,12 +327,14 @@ function createEnvironment(options = {}) {
             updateBest: (mode, reachedLevel, score) => { selectedMode = mode; level = reachedLevel; sessionScore = score; sessionPersonalBest = false; personalBestAnnounced = false; updatePersonalBest(reachedLevel); return sessionPersonalBest; },
             retryClean: () => {
                 gameActive = true; gameplayPaused = true; inputTransitionLocked = true; activeModifiers = ['moving']; activeGlobalRule = { id: 'invert' };
-                taskHistory = ['hold']; activeTaskObj = { cleanup() { this.cleaned = true; } }; const oldTask = activeTaskObj; cleanSessionRuntime();
+                taskHistory = ['hold']; taskMemory = { ...freshTaskMemory(), pendingRecall: { item: '◆', options: ['◆', '▲'], dueAt: 4 } };
+                activeTaskObj = { cleanup() { this.cleaned = true; } }; const oldTask = activeTaskObj; cleanSessionRuntime();
                 return { cleaned: oldTask.cleaned, state: globalThis.reflex7Test.state() };
             },
             retrySession: () => {
                 selectedMode = '4'; baseTime = 4; gameActive = false; activeModifiers = ['moving']; activeGlobalRule = { id: 'invert' };
-                taskHistory = ['hold']; activeTaskObj = { cleanup() { this.cleaned = true; } }; const oldTask = activeTaskObj;
+                taskHistory = ['hold']; taskMemory = { ...freshTaskMemory(), pendingRecall: { item: '◆', options: ['◆', '▲'], dueAt: 4 } };
+                activeTaskObj = { cleanup() { this.cleaned = true; } }; const oldTask = activeTaskObj;
                 document.getElementById('retry-button').dispatch('click');
                 return { cleaned: oldTask.cleaned, state: globalThis.reflex7Test.state() };
             },
@@ -319,7 +383,7 @@ startGuard.runTimers(1);
 assert(startGuard.context.reflex7Test.state().gameActive, 'one guarded timer starts the session');
 
 const registry = api.registry();
-assert.equal(registry.length, 22, 'the registry contains 22 mechanics after the replacement');
+assert.equal(registry.length, 34, 'the registry contains exactly 34 mechanics');
 assert.equal(new Set(registry.map((task) => task.id)).size, registry.length, 'task ids are unique');
 assert(!registry.some((task) => task.id === ['rhy', 'thm'].join('')), 'the removed mechanic has no registry entry');
 for (const id of ['wait', 'lastSecondInstruction', 'patienceCountdown']) assert(registry.some((task) => task.id === id), `${id}: registered`);
@@ -331,6 +395,120 @@ for (const id of ['wait', 'lastSecondInstruction', 'patienceCountdown']) {
     assert.equal(typeof lifecycle.pause, 'function', `${id}: pause lifecycle`);
     assert.equal(typeof lifecycle.resume, 'function', `${id}: resume lifecycle`);
 }
+
+const newTaskLevels = {
+    directionConflict: 11, mentalMath: 12, missingItem: 13,
+    reverseSequence: 16, countByRule: 17, oppositePosition: 18, changingAnswer: 19,
+    doubleCondition: 21, ruleSwitch: 23, nBack: 25,
+    previousRuleRecall: 26, delayedRecall: 26
+};
+const newTaskIds = Object.keys(newTaskLevels);
+assert(newTaskIds.every((id) => registry.some((task) => task.id === id)), 'all 12 new mechanics are registered');
+const richMemory = {
+    previousTarget: 7, pendingRecall: null,
+    completed: [
+        { item: '7', color: 'color.red', side: 'left', parity: 'odd' },
+        { item: '3', color: 'color.blue', side: 'right', parity: 'odd' },
+        { item: '7', color: 'color.green', side: 'left', parity: 'odd' }
+    ]
+};
+for (const [id, minLevel] of Object.entries(newTaskLevels)) {
+    api.setState({ level: minLevel - 1, duration: 7, memory: richMemory, completed: 30, rule: null, tasks: [], categories: [] });
+    assert(!api.weights().some((task) => task.id === id), `${id}: locked below level ${minLevel}`);
+    api.setState({ level: minLevel, duration: 7, memory: richMemory, completed: 30, rule: null, tasks: [], categories: [] });
+    assert(api.weights().some((task) => task.id === id), `${id}: unlocks at level ${minLevel}`);
+}
+
+const expectedCompatibility = {
+    directionConflict: { modifiers: ['delayed', 'shrinking', 'decoy', 'swap'], rules: ['invert', 'finalLine', 'oddWait'] },
+    mentalMath: { modifiers: ['mirrored', 'delayed', 'moving', 'shrinking', 'decoy', 'swap'], rules: ['invert', 'ignoreRed', 'finalLine', 'oddWait'] },
+    missingItem: { modifiers: ['mirrored', 'shrinking', 'decoy'], rules: ['finalLine', 'oddWait'] },
+    reverseSequence: { modifiers: ['mirrored', 'shrinking', 'decoy'], rules: ['finalLine', 'oddWait'] },
+    countByRule: { modifiers: ['mirrored', 'delayed', 'moving', 'shrinking', 'decoy', 'swap'], rules: ['ignoreRed', 'finalLine', 'oddWait'] },
+    oppositePosition: { modifiers: ['shrinking', 'decoy'], rules: ['finalLine', 'oddWait'] },
+    changingAnswer: { modifiers: ['mirrored', 'shrinking', 'decoy'], rules: ['finalLine', 'oddWait'] },
+    doubleCondition: { modifiers: ['mirrored', 'delayed', 'moving', 'shrinking', 'decoy', 'swap'], rules: ['finalLine', 'oddWait'] },
+    ruleSwitch: { modifiers: ['mirrored', 'shrinking', 'decoy'], rules: ['finalLine', 'oddWait'] },
+    nBack: { modifiers: ['mirrored', 'shrinking', 'decoy', 'swap'], rules: ['invert', 'ignoreRed', 'finalLine', 'oddWait'] },
+    previousRuleRecall: { modifiers: ['mirrored', 'shrinking', 'decoy', 'swap'], rules: ['ignoreRed', 'finalLine', 'oddWait'] },
+    delayedRecall: { modifiers: ['mirrored', 'shrinking', 'decoy'], rules: ['ignoreRed', 'finalLine', 'oddWait', 'emojiLiteral'] }
+};
+for (const [id, expected] of Object.entries(expectedCompatibility)) {
+    const definition = registry.find((task) => task.id === id);
+    assert.deepEqual([...definition.modifiers], expected.modifiers, `${id}: explicit modifier compatibility`);
+    assert.deepEqual([...definition.rules], expected.rules, `${id}: explicit global-rule compatibility`);
+}
+assert(!registry.find((task) => task.id === 'directionConflict').modifiers.includes('mirrored'), 'direction semantics cannot be mirrored');
+assert(!registry.find((task) => task.id === 'changingAnswer').modifiers.some((id) => ['moving', 'swap', 'delayed'].includes(id)), 'changing-answer movement conflicts are excluded');
+assert(!registry.find((task) => task.id === 'doubleCondition').rules.includes('ignoreRed'), 'double-condition excludes Ignore Red to avoid contradictory color semantics');
+
+for (const id of newTaskIds) {
+    const generated = api.exercise(id, true, { level: 45 });
+    assert.equal(generated.outcome, 'success', `${id}: generated correct answer is accepted`);
+    if (!(id === 'delayedRecall' && generated.cue)) {
+        const wrong = api.exercise(id, false, { level: 45, memory: id === 'delayedRecall' ? { ...richMemory, pendingRecall: { item: '◆', options: ['◆', '●', '▲', '■'], dueAt: 30 } } : richMemory });
+        assert(wrong.outcome?.startsWith('failure:'), `${id}: incorrect answer is rejected`);
+    }
+}
+
+api.setState({ level: 45, duration: 4, memory: { ...richMemory, completed: [] }, completed: 30, rule: null, tasks: [], categories: [] });
+assert(!api.weights().some((task) => task.id === 'nBack'), 'N-back rejects insufficient history');
+for (const [levelValue, depth] of [[25, 1], [32, 2], [45, 3]]) {
+    const result = api.exercise('nBack', true, { level: levelValue, memory: richMemory, seed: 77 });
+    assert.equal(result.depth, depth, `N-back uses ${depth}-back at level ${levelValue}`);
+}
+
+const switched = api.exercise('ruleSwitch', true, { level: 35, duration: 2, seed: 11 });
+assert.notEqual(switched.initialRule, switched.finalRule, 'rule switch changes to a different final rule');
+assert(switched.switchDelay <= 2 - 0.7 + Number.EPSILON, 'rule switch leaves a safe response reserve');
+
+const opposite = api.exercise('oppositePosition', true, { seed: 19 });
+assert.equal(Number(opposite.answer), 8 - opposite.target, 'opposite position is geometrically exact and never center-self');
+const missing = api.exercise('missingItem', true, { seed: 31 });
+assert.equal(missing.items.filter((item) => !missing.remaining.includes(item)).length, 1, 'missing item removes exactly one distinct original item');
+assert.equal(new Set(missing.items).size, missing.items.length, 'missing-item preview has no duplicates');
+
+for (const seed of [2, 3, 4, 5, 6, 7]) {
+    const math = api.exercise('mentalMath', true, { seed, level: 40 });
+    assert.equal(math.statementTrue, math.actual === math.claimed, 'mental-math truth matches evaluated expression');
+}
+const normalMath = api.exercise('mentalMath', true, { seed: 51, rule: null });
+const invertedMath = api.exercise('mentalMath', true, { seed: 51, rule: 'invert' });
+assert.notEqual(normalMath.correctLabel, invertedMath.correctLabel, 'Invert reverses mental-math YES/NO correctness');
+const normalDirection = api.exercise('directionConflict', true, { seed: 83, rule: null });
+const invertedDirection = api.exercise('directionConflict', true, { seed: 83, rule: 'invert' });
+assert.notEqual(normalDirection.correctLabel, invertedDirection.correctLabel, 'Invert reverses Direction Conflict semantics');
+
+const reverse = api.exercise('reverseSequence', true, { seed: 101, level: 35 });
+assert.deepEqual(reverse.sequence, [...reverse.original].reverse(), 'reverse sequence requires the exact reverse order');
+const countRule = api.exercise('countByRule', true, { seed: 121, level: 35 });
+assert.equal(countRule.items.filter((item) => item.css === countRule.targetColor && item.symbol === countRule.targetSymbol).length, Number(countRule.answer), 'count-by-rule answer matches rendered attributes');
+const movingAnswer = api.exercise('changingAnswer', true, { seed: 141 });
+assert.notEqual(movingAnswer.beforeOrder, movingAnswer.afterOrder, 'changing answer moves physical choices while preserving semantic correctness');
+const doubleCondition = api.exercise('doubleCondition', true, { seed: 161 });
+assert.equal(doubleCondition.correctCount, 1, 'double condition has exactly one target satisfying both properties');
+
+api.setState({ level: 45, duration: 4, memory: { ...richMemory, completed: [{ item: 'x', color: null, side: null, parity: null }] }, completed: 30, rule: null, tasks: [], categories: [] });
+assert(!api.weights().some((task) => task.id === 'previousRuleRecall'), 'previous-rule recall requires known structured metadata');
+api.setState({ level: 45, duration: 4, memory: richMemory, completed: 30, rule: null, tasks: [], categories: [] });
+assert(api.weights().some((task) => task.id === 'previousRuleRecall'), 'previous-rule recall unlocks for an unambiguous prior property');
+const purpleRecall = api.exercise('previousRuleRecall', true, {
+    seed: 164,
+    memory: { ...richMemory, completed: [{ item: '◆', color: 'color.purple', side: null, parity: null }] }
+});
+assert.equal(purpleRecall.correctCount, 1, 'previous color recall includes every color that can be stored');
+
+const cue = api.exercise('delayedRecall', true, { seed: 181, memory: richMemory, completed: 30 });
+assert(cue.cue && cue.gap >= 2 && cue.gap <= 4, 'delayed recall schedules a single cue 2–4 completed tasks ahead');
+assert(cue.memory.pendingRecall && cue.memory.pendingRecall.item === cue.item, 'delayed recall stores one controlled pending item');
+const pendingMemory = { ...richMemory, pendingRecall: { item: cue.item, options: cue.memory.pendingRecall.options, dueAt: 34 } };
+api.setState({ level: 45, duration: 4, memory: pendingMemory, completed: 33, rule: null, tasks: [], categories: [] });
+assert(!api.weights().some((task) => task.id === 'delayedRecall'), 'delayed recall stays hidden before its due round');
+api.setState({ level: 45, duration: 4, memory: pendingMemory, completed: 34, rule: null, tasks: [], categories: [] });
+assert.deepEqual(api.weights().map((task) => task.id), ['delayedRecall'], 'due delayed recall is forced without task starvation');
+const recalled = api.exercise('delayedRecall', true, { memory: pendingMemory, completed: 34 });
+assert.equal(recalled.memory.pendingRecall, null, 'successful delayed recall clears pending state');
+assert.deepEqual(api.exercise('mentalMath', true, { seed: 777 }), api.exercise('mentalMath', true, { seed: 777 }), 'seeded new-task generation remains deterministic');
 
 api.setState({ level: 50, duration: 2, memory: {} });
 assert(!api.weights().some((task) => task.id === 'previousMemory'), 'memory task requires valid memory');
@@ -354,6 +532,26 @@ registry.filter((task) => task.minDuration > 1.2).forEach((task) => assert(!avai
 
 const selected = api.selectMany(300, 123456);
 for (let index = 1; index < selected.length; index += 1) assert.notEqual(selected[index], selected[index - 1], 'tasks never immediately repeat');
+
+for (const scenarioLevel of [5, 20, 50]) {
+    const simulated = api.selectMany(3000, 88000 + scenarioLevel, scenarioLevel);
+    assert(simulated.every((id) => registry.find((task) => task.id === id).minLevel <= scenarioLevel), `level ${scenarioLevel}: simulation respects unlock gates`);
+    for (let index = 1; index < simulated.length; index += 1) assert.notEqual(simulated[index], simulated[index - 1], `level ${scenarioLevel}: simulation has no immediate repeat`);
+    if (scenarioLevel === 50) {
+        const seen = new Set(simulated);
+        registry.forEach((task) => assert(seen.has(task.id), `high-level simulation does not starve ${task.id}`));
+    }
+}
+
+for (const id of newTaskIds) {
+    for (let seed = 0; seed < 200; seed += 1) {
+        const generated = api.exercise(id, true, { seed, level: 50, duration: 2, memory: richMemory });
+        assert.equal(generated.outcome, 'success', `${id}: generation simulation seed ${seed} remains solvable`);
+        if (!['reverseSequence', 'delayedRecall'].includes(id) || !generated.cue) {
+            assert.equal(generated.correctCount, id === 'reverseSequence' ? 0 : 1, `${id}: generation seed ${seed} is unambiguous`);
+        }
+    }
+}
 
 for (const rule of ['invert', 'ignoreRed', 'finalLine', 'oddWait', 'emojiLiteral']) {
     api.setState({ level: 50, duration: 2, memory: { previousTarget: 3 }, rule: { id: rule, remaining: 2 } });
@@ -405,6 +603,11 @@ for (const [id, failureKey] of [['wait', 'failure.waitTimeout'], ['lastSecondIns
     assert.equal(timeout.failureKey, failureKey, `${id}: timeout has a precise failure reason`);
     assert.equal(timeout.pendingAfterCleanup, 0, `${id}: timeout cleanup leaves no tracked timer`);
 }
+for (const id of newTaskIds) {
+    const timeout = api.timeoutScenario(id);
+    assert(timeout.failureKey?.startsWith('failure.'), `${id}: timeout reaches a localized failure path`);
+    assert.equal(timeout.pendingAfterCleanup, 0, `${id}: timeout cleanup removes staged timers`);
+}
 
 for (const definition of registry.filter((task) => task.modifiers.length)) {
     const modifiers = api.modifiersFor(definition.id, 7);
@@ -455,11 +658,13 @@ assert(!retry.state.gameActive && !retry.state.gameplayPaused && !retry.state.tr
 assert.equal(retry.state.activeModifiers.length, 0, 'retry cleanup removes modifiers');
 assert.equal(retry.state.activeGlobalRule, null, 'retry cleanup removes global rules');
 assert.equal(retry.state.taskHistory.length, 0, 'retry cleanup removes task history');
+assert.equal(retry.state.taskMemory.pendingRecall, null, 'return/menu cleanup clears delayed-recall state');
 const restarted = api.retrySession();
 assert(restarted.cleaned && restarted.state.gameActive && restarted.state.level === 1, 'same-mode retry starts a clean level-one session without reload');
 assert.equal(restarted.state.selectedMode, '4', 'retry preserves the selected mode');
 assert.equal(restarted.state.activeModifiers.length, 0, 'old retry modifier state does not survive');
 assert.equal(restarted.state.activeGlobalRule, null, 'old retry rule state does not survive');
+assert.equal(restarted.state.taskMemory.pendingRecall, null, 'retry starts without delayed memory from the previous session');
 
 api.audio().unlock();
 assert(api.audio().play('success'), 'audio unlocks after an explicit interaction');
@@ -499,4 +704,4 @@ for (const id of [...fs.readFileSync('script.js', 'utf8').matchAll(/getElementBy
     assert(htmlIds.has(id), `script DOM reference exists in HTML: #${id}`);
 }
 
-console.log(`Reflex7 v1.1.0 tests passed: ${registry.length} tasks, ${keys.tr.length} keys/locale, 300 controlled selections, session/PWA checks.`);
+console.log(`Reflex7 v1.1.0 tests passed: ${registry.length} tasks, ${keys.tr.length} keys/locale, 9,000 progression selections, 2,400 new-task generations, session/PWA checks.`);

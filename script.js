@@ -79,7 +79,7 @@ const translations = {
         'task.delayed.name': 'Son Sözü Dinle', 'task.delayed.initial': 'Bekle… İlk komut geçersiz.', 'task.delayed.final': 'ŞİMDİ {count} numaralı düğmeyi seç.',
         'task.positionMemory.name': 'Konum Hafızası', 'task.positionMemory.watch': 'Parlayan konumu ezberle.', 'task.positionMemory.choose': 'Önceki konumu seç.',
         'task.count.name': 'Sembol Sayacı', 'task.count.instruction': '{symbol} sembolünden kaç tane var?',
-        'task.yesNo.name': 'Doğru mu?', 'task.yesNo.statement': '{number} sayısı {parity}.', 'task.yesNo.even': 'çifttir', 'task.yesNo.odd': 'tektir', 'common.yes': 'EVET', 'common.no': 'HAYIR',
+        'task.yesNo.name': 'Doğru mu?', 'task.yesNo.statement': '{number} sayısı {parity}.', 'task.yesNo.even': 'çifttir', 'task.yesNo.odd': 'tektir', 'common.yes': 'EVET', 'common.no': 'HAYIR', 'common.odd': 'TEK', 'common.even': 'ÇİFT',
         'failure.wrongChoice': 'Yanlış seçimi yaptın!', 'failure.gridTimeout': 'Seçim süresi bitti!', 'failure.flashEarly': 'Dizi henüz gösteriliyordu!', 'failure.clickSingle': 'Yalnızca bir kez basmalıydın!', 'failure.clickDouble': 'İkinci basış gelmedi!', 'failure.notActive': 'Etkinleşme işaretini beklemeliydin!',
         'feedback.success': 'DOĞRU!', 'feedback.almost': 'NEREDEYSE!', 'feedback.newMechanic': 'YENİ MEKANİK: {name}', 'feedback.paused': 'OYUN DURAKLATILDI', 'feedback.resumed': 'DEVAM!',
         'modifier.label': 'DEĞİŞTİRİCİ: {name}', 'modifier.mirrored': 'Aynalı komut', 'modifier.delayed': 'Gecikmeli kontroller', 'modifier.moving': 'Hareketli kontroller', 'modifier.shrinking': 'Küçülen kontroller', 'modifier.decoy': 'Sahte komut', 'modifier.swap': 'Konum değişimi', 'modifier.wait': 'İşareti bekle…', 'modifier.ready': 'HAZIR!', 'modifier.decoyText': 'SAHTE: İlk gördüğüne bas.', 'modifier.realText': 'GERÇEK KOMUT',
@@ -99,6 +99,22 @@ const translations = {
         'task.patience.name': 'Sabır Geri Sayımı', 'task.patience.instruction': 'Acele etme.', 'task.patience.go': 'GO!', 'task.patience.hesitation': '…',
         'failure.waitEarly': 'İzin verilmeden bastın!', 'failure.waitTimeout': 'ŞİMDİ BAS işaretinden sonra basmadın!',
         'failure.lastSecondTimeout': 'Son talimatı zamanında uygulamadın!', 'failure.patienceEarly': 'GO işareti görünmeden bastın!', 'failure.patienceTimeout': 'GO işaretinden sonra zamanında basmadın!',
+        'task.nBack.name': 'N-Geri', 'task.nBack.instruction': 'Bu öğe {count} görev öncekiyle aynı mı?\n{item}',
+        'task.ruleSwitch.name': 'Kural Değişimi', 'task.ruleSwitch.initial': 'İLK KURAL: {rule}\nDeğişmesini bekle.', 'task.ruleSwitch.final': 'KURAL DEĞİŞTİ: {rule}',
+        'task.rule.largest': 'EN BÜYÜĞÜ SEÇ', 'task.rule.smallest': 'EN KÜÇÜĞÜ SEÇ', 'task.rule.even': 'ÇİFTİ SEÇ', 'task.rule.odd': 'TEKİ SEÇ',
+        'task.opposite.name': 'Karşı Konum', 'task.opposite.watch': 'Parlayan konumu izle.', 'task.opposite.choose': 'Geometrik olarak KARŞI konumu seç.',
+        'task.missing.name': 'Eksik Öğe', 'task.missing.watch': 'Öğeleri ezberle: {items}', 'task.missing.choose': 'Şimdi eksik olanı seç: {items}',
+        'task.mentalMath.name': 'Zihinden İşlem Tuzağı', 'task.mentalMath.instruction': 'Bu işlem doğru mu?\n{expression}',
+        'task.direction.name': 'Yön Çatışması', 'task.direction.arrow': 'OKU İZLE', 'task.direction.position': 'KONUMU İZLE',
+        'direction.left': 'SOL', 'direction.right': 'SAĞ', 'direction.up': 'YUKARI', 'direction.down': 'AŞAĞ',
+        'task.reverse.name': 'Ters Sıra', 'task.reverse.watch': 'Diziyi ezberle: {sequence}', 'task.reverse.choose': 'Öğeleri TERS sırayla seç.',
+        'task.countRule.name': 'Kurala Göre Say', 'task.countRule.instruction': 'Kaç tane {color} {shape} var?',
+        'shape.triangle': 'üçgen', 'shape.circle': 'daire', 'shape.square': 'kare',
+        'task.changing.name': 'Değişen Cevap', 'task.changing.watch': '{value} cevabını takip et. Düğmeler yer değiştirecek.', 'task.changing.choose': 'ŞİMDİ {value} cevabını seç.',
+        'task.double.name': 'Çifte Koşul', 'task.double.largestEven': 'EN BÜYÜK ÇİFT sayıyı seç.', 'task.double.smallestOdd': 'EN KÜÇÜK TEK sayıyı seç.', 'task.double.colorShape': '{color} {shape} seç.',
+        'task.previousRule.name': 'Önceki Kuralı Hatırla', 'task.previousRule.color': 'Önceki doğru cevabın rengi neydi?', 'task.previousRule.side': 'Önceki doğru cevap hangi taraftaydı?', 'task.previousRule.parity': 'Önceki doğru cevap tek miydi, çift miydi?',
+        'task.delayedRecall.name': 'Gecikmeli Hatırlama', 'task.delayedRecall.remember': 'BUNU EZBERLE: {item}\nBirazdan sorulacak.', 'task.delayedRecall.question': 'Daha önce ezberlemen istenen öğe hangisiydi?',
+        'failure.ruleSwitchTimeout': 'Yeni kurala zamanında cevap vermedin!', 'failure.memoryTimeout': 'Hatırlama süresi bitti!',
         'color.purple': 'mor', 'color.orange': 'turuncu',
         'category.reaction': 'tepki', 'category.inhibition': 'kontrol', 'category.memory': 'hafıza', 'category.visual': 'görsel', 'category.arithmetic': 'matematik', 'category.sequence': 'sıralama', 'category.timing': 'zamanlama', 'category.language': 'dil', 'category.deception': 'aldatmaca', 'category.precision': 'hassasiyet', 'task.legacyName': 'Klasik görev', 'task.standard.name': 'Hızlı Basış', 'task.package.name': 'Kural Tuzağı', 'task.hold.name': 'Basılı Tut', 'task.colorShift.name': 'Renk Bekleme', 'task.sequence.name': 'Sıra', 'task.evade.name': 'Hareketli Hedef'
     },
@@ -168,7 +184,7 @@ const translations = {
         'task.delayed.name': 'Listen to the Last Word', 'task.delayed.initial': 'Wait… The first command is invalid.', 'task.delayed.final': 'NOW select button {count}.',
         'task.positionMemory.name': 'Position Memory', 'task.positionMemory.watch': 'Memorize the glowing position.', 'task.positionMemory.choose': 'Select the previous position.',
         'task.count.name': 'Symbol Count', 'task.count.instruction': 'How many {symbol} symbols are there?',
-        'task.yesNo.name': 'True or False?', 'task.yesNo.statement': '{number} is {parity}.', 'task.yesNo.even': 'even', 'task.yesNo.odd': 'odd', 'common.yes': 'YES', 'common.no': 'NO',
+        'task.yesNo.name': 'True or False?', 'task.yesNo.statement': '{number} is {parity}.', 'task.yesNo.even': 'even', 'task.yesNo.odd': 'odd', 'common.yes': 'YES', 'common.no': 'NO', 'common.odd': 'ODD', 'common.even': 'EVEN',
         'failure.wrongChoice': 'That was the wrong choice!', 'failure.gridTimeout': 'Selection time ran out!', 'failure.flashEarly': 'The sequence was still visible!', 'failure.clickSingle': 'You were supposed to press only once!', 'failure.clickDouble': 'The second press never arrived!', 'failure.notActive': 'You should have waited for the activation signal!',
         'feedback.success': 'CORRECT!', 'feedback.almost': 'ALMOST!', 'feedback.newMechanic': 'NEW MECHANIC: {name}', 'feedback.paused': 'GAME PAUSED', 'feedback.resumed': 'GO!',
         'modifier.label': 'MODIFIER: {name}', 'modifier.mirrored': 'Mirrored instruction', 'modifier.delayed': 'Delayed controls', 'modifier.moving': 'Moving controls', 'modifier.shrinking': 'Shrinking controls', 'modifier.decoy': 'Decoy instruction', 'modifier.swap': 'Position swap', 'modifier.wait': 'Wait for the signal…', 'modifier.ready': 'READY!', 'modifier.decoyText': 'DECOY: Press the first thing you see.', 'modifier.realText': 'REAL INSTRUCTION',
@@ -188,6 +204,22 @@ const translations = {
         'task.patience.name': 'Patience Countdown', 'task.patience.instruction': 'Be patient.', 'task.patience.go': 'GO!', 'task.patience.hesitation': '…',
         'failure.waitEarly': 'You pressed before permission!', 'failure.waitTimeout': 'You did not press after PRESS NOW appeared!',
         'failure.lastSecondTimeout': 'You did not follow the final instruction in time!', 'failure.patienceEarly': 'You pressed before GO appeared!', 'failure.patienceTimeout': 'You did not press after GO appeared!',
+        'task.nBack.name': 'N-Back', 'task.nBack.instruction': 'Does this item match the one from {count} tasks ago?\n{item}',
+        'task.ruleSwitch.name': 'Rule Switch', 'task.ruleSwitch.initial': 'FIRST RULE: {rule}\nWait for it to change.', 'task.ruleSwitch.final': 'RULE CHANGED: {rule}',
+        'task.rule.largest': 'SELECT LARGEST', 'task.rule.smallest': 'SELECT SMALLEST', 'task.rule.even': 'SELECT EVEN', 'task.rule.odd': 'SELECT ODD',
+        'task.opposite.name': 'Opposite Position', 'task.opposite.watch': 'Watch the highlighted position.', 'task.opposite.choose': 'Select the geometrically OPPOSITE position.',
+        'task.missing.name': 'Missing Item', 'task.missing.watch': 'Memorize the items: {items}', 'task.missing.choose': 'Select the missing item: {items}',
+        'task.mentalMath.name': 'Mental Math Trap', 'task.mentalMath.instruction': 'Is this equation true?\n{expression}',
+        'task.direction.name': 'Direction Conflict', 'task.direction.arrow': 'FOLLOW ARROW', 'task.direction.position': 'FOLLOW POSITION',
+        'direction.left': 'LEFT', 'direction.right': 'RIGHT', 'direction.up': 'UP', 'direction.down': 'DOWN',
+        'task.reverse.name': 'Reverse Sequence', 'task.reverse.watch': 'Memorize the sequence: {sequence}', 'task.reverse.choose': 'Select the items in REVERSE order.',
+        'task.countRule.name': 'Count by Rule', 'task.countRule.instruction': 'How many {color} {shape} are there?',
+        'shape.triangle': 'triangles', 'shape.circle': 'circles', 'shape.square': 'squares',
+        'task.changing.name': 'Changing Answer', 'task.changing.watch': 'Track answer {value}. The buttons will move.', 'task.changing.choose': 'NOW select answer {value}.',
+        'task.double.name': 'Double Condition', 'task.double.largestEven': 'Select the LARGEST EVEN number.', 'task.double.smallestOdd': 'Select the SMALLEST ODD number.', 'task.double.colorShape': 'Select the {color} {shape}.',
+        'task.previousRule.name': 'Previous Rule Recall', 'task.previousRule.color': 'What color was the previous correct answer?', 'task.previousRule.side': 'Which side was the previous correct answer on?', 'task.previousRule.parity': 'Was the previous correct answer odd or even?',
+        'task.delayedRecall.name': 'Delayed Recall', 'task.delayedRecall.remember': 'REMEMBER THIS: {item}\nYou will be asked later.', 'task.delayedRecall.question': 'Which item were you asked to remember earlier?',
+        'failure.ruleSwitchTimeout': 'You did not answer the new rule in time!', 'failure.memoryTimeout': 'Recall time ran out!',
         'color.purple': 'purple', 'color.orange': 'orange',
         'category.reaction': 'reaction', 'category.inhibition': 'inhibition', 'category.memory': 'memory', 'category.visual': 'visual', 'category.arithmetic': 'arithmetic', 'category.sequence': 'sequence', 'category.timing': 'timing', 'category.language': 'language', 'category.deception': 'deception', 'category.precision': 'precision', 'task.legacyName': 'Classic task', 'task.standard.name': 'Rapid Press', 'task.package.name': 'Rule Trap', 'task.hold.name': 'Hold and Release', 'task.colorShift.name': 'Color Wait', 'task.sequence.name': 'Sequence', 'task.evade.name': 'Moving Target'
     }
@@ -277,7 +309,10 @@ let activeModifiers = [];
 let activeGlobalRule = null;
 let taskHistory = [];
 let categoryHistory = [];
-let taskMemory = {};
+function freshTaskMemory() {
+    return { completed: [], pendingRecall: null };
+}
+let taskMemory = freshTaskMemory();
 let completedTaskCount = 0;
 let gameplayPaused = false;
 let announcementTimer = null;
@@ -402,6 +437,14 @@ function setInstruction(key, params = {}) {
     instructionText.textContent = text;
     arenaInstruction.textContent = text;
     mainButton.setAttribute('aria-label', text.replace(/\n/g, ' '));
+}
+
+function setLiveInstruction(key, params = {}) {
+    setInstruction(key, params);
+    if (activeGlobalRule?.id === 'finalLine') {
+        arenaInstruction.textContent = `${t('rule.decoyLine')}\n${t(key, params)}`;
+        arenaInstruction.classList.add('final-authority');
+    }
 }
 
 function formatNumber(value) {
@@ -543,7 +586,7 @@ function startGame() {
     activeGlobalRule = null;
     taskHistory = [];
     categoryHistory = [];
-    taskMemory = {};
+    taskMemory = freshTaskMemory();
     completedTaskCount = 0;
     gameplayPaused = false;
     sessionScore = 0;
@@ -596,9 +639,22 @@ function updatePersonalBest(reachedLevel = level) {
 
 function taskSuccess() {
     if (!gameActive) return;
+    let memoryUpdate = {};
     if (activeTaskObj && typeof activeTaskObj.getMemory === 'function') {
-        taskMemory = { ...taskMemory, ...activeTaskObj.getMemory() };
+        memoryUpdate = activeTaskObj.getMemory() || {};
     }
+    const targets = typeof activeTaskObj?.getModifierTargets === 'function' ? activeTaskObj.getModifierTargets() : [];
+    const correctIndex = targets.findIndex((target) => target.dataset.correct === 'true');
+    const numeric = Number(memoryUpdate.previousTarget);
+    const item = memoryUpdate.historyItem ?? memoryUpdate.previousColor ?? memoryUpdate.previousAnswer ?? (Number.isFinite(numeric) ? numeric : null);
+    const metadata = {
+        item: item === null || item === undefined ? null : String(item),
+        color: memoryUpdate.previousColor || null,
+        side: targets.length === 2 && correctIndex >= 0 ? (correctIndex === 0 ? 'left' : 'right') : null,
+        parity: Number.isInteger(numeric) ? (Math.abs(numeric % 2) === 0 ? 'even' : 'odd') : null
+    };
+    const completed = [...(taskMemory.completed || []), metadata].slice(-16);
+    taskMemory = { ...taskMemory, ...memoryUpdate, completed };
     completedTaskCount += 1;
     combo += 1;
     highestCombo = Math.max(highestCombo, combo);
@@ -1174,7 +1230,7 @@ class TaskLastSecondInstruction extends GridTaskBase {
         });
     }
 
-    getMemory() { return { previousAnswer: this.finalColor.key }; }
+    getMemory() { return { previousAnswer: this.finalColor.key, previousColor: this.finalColor.key }; }
     onTimeUp() { taskFail('failure.lastSecondTimeout'); }
 
     cleanup() {
@@ -1419,7 +1475,7 @@ class TaskStroop extends GridTaskBase {
             this.addChoice(`${ink.symbol} ${t(word.key).toLocaleUpperCase(currentLanguage)}`, correct, { color: ink.css, className: 'stroop-choice' });
         });
     }
-    getMemory() { return { previousColor: this.answerColor, previousAnswer: this.answerColor }; }
+    getMemory() { return { previousAnswer: this.answerColor }; }
 }
 
 class TaskPreviousMemory extends GridTaskBase {
@@ -1563,6 +1619,282 @@ class TaskYesNo extends GridTaskBase {
     getMemory() { return { previousTarget: this.number, previousAnswer: this.answerYes }; }
 }
 
+const MEMORY_ITEMS = ['●', '▲', '■', '◆', 'A', 'K', '7', '3'];
+const DIRECTION_DATA = {
+    left: { symbol: '←', opposite: 'right' }, right: { symbol: '→', opposite: 'left' },
+    up: { symbol: '↑', opposite: 'down' }, down: { symbol: '↓', opposite: 'up' }
+};
+const SHAPE_DATA = [
+    { id: 'triangle', symbol: '▲', key: 'shape.triangle' },
+    { id: 'circle', symbol: '●', key: 'shape.circle' },
+    { id: 'square', symbol: '■', key: 'shape.square' }
+];
+
+function allowedNBackDepth(memory = taskMemory, currentLevel = level) {
+    const maximum = currentLevel >= 40 ? 3 : currentLevel >= 32 ? 2 : 1;
+    for (let depth = maximum; depth >= 1; depth -= 1) {
+        if (memory.completed?.at(-depth)?.item) return depth;
+    }
+    return 0;
+}
+
+function renderAttributeBoard(items) {
+    const board = document.createElement('div');
+    board.className = 'task-visual-board attribute-collection';
+    items.forEach((item) => {
+        const token = document.createElement('span');
+        token.className = 'attribute-item'; token.textContent = item.symbol;
+        if (item.css) token.style.color = item.css;
+        board.appendChild(token);
+    });
+    sequenceContainer.appendChild(board);
+    activeTaskObj?.grid?.classList.add('has-visual-board');
+    return board;
+}
+
+function uniqueRandomNumbers(count, minimum, maximum) {
+    const values = new Set();
+    let attempts = 0;
+    while (values.size < count && attempts < count * 8) { values.add(randomInt(minimum, maximum)); attempts += 1; }
+    for (let candidate = minimum; values.size < count && candidate <= maximum; candidate += 1) values.add(candidate);
+    return [...values];
+}
+
+class TaskNBack extends GridTaskBase {
+    setup() {
+        this.depth = allowedNBackDepth();
+        const reference = taskMemory.completed.at(-this.depth).item;
+        const matches = Math.random() < 0.5;
+        const alternatives = MEMORY_ITEMS.filter((item) => item !== reference);
+        this.item = matches ? reference : alternatives[randomInt(0, alternatives.length - 1)];
+        this.answerYes = activeGlobalRule?.id === 'invert' ? !matches : matches;
+        this.setupGrid('task.nBack.instruction', { count: this.depth, item: this.item }, 2);
+        this.addChoice(t('common.yes'), this.answerYes);
+        this.addChoice(t('common.no'), !this.answerYes);
+    }
+    getMemory() { return { previousAnswer: this.item, historyItem: this.item }; }
+}
+
+class TaskRuleSwitch extends GridTaskBase {
+    setup() {
+        const finalRules = ['largest', 'smallest', 'even', 'odd'];
+        this.finalRule = finalRules[randomInt(0, finalRules.length - 1)];
+        this.initialRule = this.finalRule === 'largest' ? 'smallest' : this.finalRule === 'smallest' ? 'largest' : 'largest';
+        const count = level >= 35 ? 6 : 4;
+        if (this.finalRule === 'even' || this.finalRule === 'odd') {
+            const parity = this.finalRule === 'even' ? 0 : 1;
+            this.answer = randomInt(4, 18) * 2 + parity;
+            const opposite = parity === 0 ? 1 : 0;
+            const distractors = new Set();
+            let attempts = 0;
+            while (distractors.size < count - 1 && attempts < count * 8) { distractors.add(randomInt(2, 24) * 2 + opposite); attempts += 1; }
+            for (let value = 2; distractors.size < count - 1; value += 1) distractors.add(value * 2 + opposite);
+            this.values = [this.answer, ...distractors];
+        } else {
+            this.values = shuffled(uniqueRandomNumbers(count, 2, 48));
+            this.answer = this.finalRule === 'largest' ? Math.max(...this.values) : Math.min(...this.values);
+        }
+        this.setupGrid('task.ruleSwitch.initial', { rule: t(`task.rule.${this.initialRule}`) }, count > 4 ? 3 : 2);
+        shuffled(this.values).forEach((value) => this.addChoice(value, value === this.answer));
+        this.setInputLocked(true);
+        const reserve = clamp(timeLeft * 0.42, 0.7, 1.2);
+        this.switchDelay = clamp(timeLeft * 0.3, 0.4, timeLeft - reserve);
+        scheduleTaskTimeout(this, () => {
+            setLiveInstruction('task.ruleSwitch.final', { rule: t(`task.rule.${this.finalRule}`) });
+            this.setInputLocked(false, 'task'); audio.play('signal'); this.grid.classList.add('position-swapped');
+        }, this.switchDelay * 1000);
+    }
+    onTimeUp() { taskFail('failure.ruleSwitchTimeout'); }
+    getMemory() { return { previousTarget: this.answer, previousAnswer: this.answer, historyItem: this.answer }; }
+}
+
+class TaskOppositePosition extends GridTaskBase {
+    setup() {
+        const positions = [0, 1, 2, 3, 5, 6, 7, 8];
+        this.target = positions[randomInt(0, positions.length - 1)]; this.answer = 8 - this.target;
+        this.setupGrid('task.opposite.watch', {}, 3);
+        for (let index = 0; index < 9; index += 1) {
+            this.addChoice('', index === this.answer, { ariaLabel: t('access.memoryCell', { number: index + 1 }), className: index === this.target ? 'memory-highlight' : '' });
+        }
+        this.setInputLocked(true);
+        this.previewDelay = clamp(timeLeft * 0.24, 0.42, Math.max(0.42, timeLeft - 0.75));
+        scheduleTaskTimeout(this, () => {
+            this.getModifierTargets().forEach((button) => button.classList.remove('memory-highlight'));
+            setLiveInstruction('task.opposite.choose'); this.setInputLocked(false, 'task');
+        }, this.previewDelay * 1000);
+    }
+    getMemory() { return { previousAnswer: this.answer, historyItem: this.answer }; }
+}
+
+class TaskMissingItem extends GridTaskBase {
+    setup() {
+        const count = level >= 30 ? 7 : level >= 20 ? 6 : 5;
+        const pool = level >= 30 ? ['●', '○', '■', '□', '▲', '△', '◆', '◇', '★'] : ['●', '■', '▲', '◆', '★', '✚', '⬟', '☀'];
+        this.items = shuffled(pool).slice(0, count); this.answer = this.items[randomInt(0, this.items.length - 1)];
+        this.remaining = this.items.filter((item) => item !== this.answer);
+        this.setupGrid('task.missing.watch', { items: this.items.join('  ') }, count > 6 ? 3 : 2);
+        this.setInputLocked(true);
+        this.previewDelay = clamp(timeLeft * 0.25, 0.45, Math.max(0.45, timeLeft - 0.75));
+        scheduleTaskTimeout(this, () => {
+            setLiveInstruction('task.missing.choose', { items: this.remaining.join('  ') });
+            shuffled(this.items).forEach((item) => this.addChoice(item, item === this.answer));
+            this.setInputLocked(false, 'task');
+        }, this.previewDelay * 1000);
+    }
+    getMemory() { return { previousAnswer: this.answer, historyItem: this.answer }; }
+}
+
+class TaskMentalMath extends GridTaskBase {
+    setup() {
+        const isTrue = Math.random() < 0.5;
+        let actual; let expression;
+        if (level < 18) {
+            const a = randomInt(3, 18), b = randomInt(2, 12), add = Math.random() < 0.5;
+            actual = add ? a + b : a - b; expression = `${a} ${add ? '+' : '−'} ${b}`;
+        } else if (level < 30) {
+            const a = randomInt(3, 9), b = randomInt(2, 7); actual = a * b; expression = `${a} × ${b}`;
+        } else {
+            const a = randomInt(3, 8), b = randomInt(2, 6), c = randomInt(2, 9); actual = a * b - c; expression = `(${a} × ${b}) − ${c}`;
+        }
+        this.actual = actual; this.statementTrue = isTrue;
+        const delta = shuffled([-2, -1, 1, 2])[0]; this.claimed = isTrue ? actual : actual + delta;
+        this.answerYes = activeGlobalRule?.id === 'invert' ? !isTrue : isTrue;
+        this.expression = `${expression} = ${this.claimed}`;
+        this.setupGrid('task.mentalMath.instruction', { expression: this.expression }, 2);
+        this.addChoice(t('common.yes'), this.answerYes); this.addChoice(t('common.no'), !this.answerYes);
+    }
+    getMemory() { return { previousTarget: this.claimed, previousAnswer: this.claimed, historyItem: this.claimed }; }
+}
+
+class TaskDirectionConflict extends GridTaskBase {
+    setup() {
+        const directions = level >= 24 ? ['left', 'right', 'up', 'down'] : ['left', 'right'];
+        this.arrow = directions[randomInt(0, directions.length - 1)];
+        this.position = directions[randomInt(0, directions.length - 1)];
+        if (this.position === this.arrow) this.position = DIRECTION_DATA[this.arrow].opposite;
+        this.followArrow = Math.random() < 0.5;
+        const semantic = this.followArrow ? this.arrow : this.position;
+        this.answer = activeGlobalRule?.id === 'invert' ? DIRECTION_DATA[semantic].opposite : semantic;
+        this.setupGrid(this.followArrow ? 'task.direction.arrow' : 'task.direction.position', {}, directions.length);
+        const board = document.createElement('div'); board.className = `task-visual-board direction-board position-${this.position}`;
+        board.textContent = DIRECTION_DATA[this.arrow].symbol; sequenceContainer.appendChild(board); this.grid.classList.add('has-visual-board');
+        directions.forEach((direction) => this.addChoice(t(`direction.${direction}`), direction === this.answer));
+    }
+    getMemory() { return { previousAnswer: this.answer, historyItem: DIRECTION_DATA[this.arrow].symbol }; }
+}
+
+class TaskReverseSequence extends GridTaskBase {
+    setup() {
+        const length = level >= 32 ? 5 : level >= 22 ? 4 : 3;
+        this.original = shuffled(['1', '2', '3', '4', '5', '6']).slice(0, length); this.sequence = [...this.original].reverse(); this.progress = 0;
+        this.setupGrid('task.reverse.watch', { sequence: this.original.join(' → ') }, 3); this.setInputLocked(true);
+        this.previewDelay = clamp(timeLeft * 0.28, 0.5, Math.max(0.5, timeLeft - 0.85));
+        scheduleTaskTimeout(this, () => {
+            setLiveInstruction('task.reverse.choose'); shuffled(this.original).forEach((item) => this.addChoice(item, false)); this.setInputLocked(false, 'task');
+        }, this.previewDelay * 1000);
+    }
+    onChoice(button) {
+        if (button.textContent !== this.sequence[this.progress]) return taskFail('failure.sequenceWrong');
+        button.disabled = true; button.classList.add('selected-choice'); this.progress += 1;
+        if (this.progress === this.sequence.length) taskSuccess();
+    }
+    getMemory() { return { previousAnswer: this.sequence.at(-1), historyItem: this.original.at(-1) }; }
+}
+
+class TaskCountByRule extends GridTaskBase {
+    setup() {
+        const palette = STROOP_COLORS.slice(0, level >= 30 ? 4 : 3); const shapes = SHAPE_DATA;
+        this.targetColor = palette[randomInt(0, palette.length - 1)]; this.targetShape = shapes[randomInt(0, shapes.length - 1)];
+        this.answer = randomInt(1, level >= 30 ? 4 : 3); const total = level >= 30 ? 11 : 8;
+        this.items = Array.from({ length: this.answer }, () => ({ symbol: this.targetShape.symbol, css: this.targetColor.css }));
+        while (this.items.length < total) {
+            let color = palette[randomInt(0, palette.length - 1)], shape = shapes[randomInt(0, shapes.length - 1)];
+            if (color === this.targetColor && shape === this.targetShape) shape = shapes[(shapes.indexOf(shape) + 1) % shapes.length];
+            this.items.push({ symbol: shape.symbol, css: color.css });
+        }
+        this.setupGrid('task.countRule.instruction', { color: t(this.targetColor.key), shape: t(this.targetShape.key) }, 3);
+        renderAttributeBoard(shuffled(this.items));
+        const answers = shuffled([...new Set([this.answer, Math.max(0, this.answer - 1), this.answer + 1, this.answer + 2])]);
+        answers.forEach((value) => this.addChoice(value, value === this.answer));
+    }
+    getMemory() { return { previousTarget: this.answer, previousAnswer: this.answer, historyItem: this.answer }; }
+}
+
+class TaskChangingAnswer extends GridTaskBase {
+    setup() {
+        const values = shuffled([1, 2, 3, 4, 5, 6]).slice(0, level >= 30 ? 6 : 4); this.answer = values[randomInt(0, values.length - 1)];
+        this.setupGrid('task.changing.watch', { value: this.answer }, values.length > 4 ? 3 : 2);
+        shuffled(values).forEach((value) => this.addChoice(value, value === this.answer)); this.setInputLocked(true);
+        const reserve = clamp(timeLeft * 0.45, 0.72, 1.25); this.moveDelay = clamp(timeLeft * 0.26, 0.38, timeLeft - reserve);
+        scheduleTaskTimeout(this, () => {
+            const original = [...this.grid.children]; let changed = shuffled(original);
+            if (changed.every((child, index) => child === original[index]) && changed.length > 1) changed = [...changed.slice(1), changed[0]];
+            changed.forEach((child) => this.grid.appendChild(child));
+            this.grid.classList.add('answer-position-change'); setLiveInstruction('task.changing.choose', { value: this.answer }); this.setInputLocked(false, 'task'); audio.play('signal');
+        }, this.moveDelay * 1000);
+    }
+    getMemory() { return { previousTarget: this.answer, previousAnswer: this.answer, historyItem: this.answer }; }
+}
+
+class TaskDoubleCondition extends GridTaskBase {
+    setup() {
+        const kind = shuffled(['largestEven', 'smallestOdd', 'colorShape'])[0];
+        if (kind === 'largestEven' || kind === 'smallestOdd') {
+            const even = kind === 'largestEven'; this.answer = even ? randomInt(8, 18) * 2 : randomInt(5, 14) * 2 + 1;
+            const values = even
+                ? [this.answer, this.answer - 4, this.answer + 3, this.answer + 7, this.answer - 1]
+                : [this.answer, this.answer + 4, this.answer - 3, this.answer - 7, this.answer + 1];
+            this.setupGrid(`task.double.${kind}`, {}, 3);
+            shuffled([...new Set(values)]).forEach((value) => this.addChoice(value, value === this.answer));
+            this.memory = { previousTarget: this.answer, previousAnswer: this.answer, historyItem: this.answer };
+        } else {
+            const palette = STROOP_COLORS.slice(0, 4), shape = SHAPE_DATA[randomInt(0, SHAPE_DATA.length - 1)], color = palette[randomInt(0, palette.length - 1)];
+            const otherShape = SHAPE_DATA[(SHAPE_DATA.indexOf(shape) + 1) % SHAPE_DATA.length], otherColor = palette[(palette.indexOf(color) + 1) % palette.length];
+            const values = [{ color, shape, correct: true }, { color, shape: otherShape }, { color: otherColor, shape }, { color: otherColor, shape: otherShape }];
+            this.setupGrid('task.double.colorShape', { color: t(color.key), shape: t(shape.key) }, 2);
+            shuffled(values).forEach((item, index) => this.addChoice(item.shape.symbol, Boolean(item.correct), { color: item.color.css }));
+            this.memory = { previousColor: color.key, previousAnswer: color.key, historyItem: shape.symbol };
+        }
+    }
+    getMemory() { return this.memory; }
+}
+
+class TaskPreviousRuleRecall extends GridTaskBase {
+    setup() {
+        const previous = taskMemory.completed.at(-1); const properties = ['color', 'side', 'parity'].filter((key) => previous?.[key]);
+        this.property = properties[randomInt(0, properties.length - 1)]; this.answer = previous[this.property];
+        const optionMap = { color: LAST_SECOND_COLORS.map((entry) => entry.key), side: ['left', 'right'], parity: ['odd', 'even'] };
+        const label = (value) => this.property === 'color' ? t(value) : this.property === 'side' ? t(`direction.${value}`) : t(`common.${value}`);
+        this.setupGrid(`task.previousRule.${this.property}`, {}, this.property === 'color' ? 2 : 2);
+        shuffled(optionMap[this.property]).forEach((value) => this.addChoice(label(value), value === this.answer));
+    }
+    getMemory() { return { previousAnswer: this.answer, previousColor: this.property === 'color' ? this.answer : undefined, historyItem: this.answer }; }
+}
+
+class TaskDelayedRecall extends GridTaskBase {
+    setup() {
+        this.pending = taskMemory.pendingRecall;
+        if (!this.pending) {
+            const pool = activeGlobalRule?.id === 'emojiLiteral' ? ['🍎', '⚡', '🌙', '⭐', '◆', '▲'] : MEMORY_ITEMS;
+            this.cue = true; this.item = pool[randomInt(0, pool.length - 1)];
+            this.options = shuffled([this.item, ...pool.filter((item) => item !== this.item)]).slice(0, 4);
+            if (!this.options.includes(this.item)) this.options[0] = this.item;
+            this.gap = randomInt(2, 4); this.setupGrid('task.delayedRecall.remember', { item: this.item }, 2); this.setInputLocked(true);
+            this.previewDelay = clamp(timeLeft * 0.2, 0.42, Math.max(0.42, timeLeft - 0.7));
+            scheduleTaskTimeout(this, () => taskSuccess(), this.previewDelay * 1000);
+        } else {
+            this.cue = false; this.item = this.pending.item; this.setupGrid('task.delayedRecall.question', {}, 2);
+            shuffled(this.pending.options).forEach((item) => this.addChoice(item, item === this.item));
+        }
+    }
+    getMemory() {
+        return this.cue
+            ? { pendingRecall: { item: this.item, options: this.options, dueAt: completedTaskCount + 1 + this.gap }, previousAnswer: this.item, historyItem: this.item }
+            : { pendingRecall: null, previousAnswer: this.item, historyItem: this.item };
+    }
+    onTimeUp() { taskFail('failure.memoryTimeout'); }
+}
+
 // ---------- TASK ENGINE V2: REGISTRY, SELECTION, MODIFIERS, AND RULES ----------
 
 const ALL_GRID_MODIFIERS = ['mirrored', 'delayed', 'moving', 'shrinking', 'decoy', 'swap'];
@@ -1588,7 +1920,19 @@ const TASK_REGISTRY = [
     { id: 'delayedInstruction', category: 'inhibition', minLevel: 10, weight: 3, difficulty: 3, minDuration: 1.5, nameKey: 'task.delayed.name', inputs: ['pointer', 'keyboard'], rules: ['finalLine'], modifiers: ['mirrored', 'shrinking', 'decoy'], create: () => new TaskDelayedInstruction() },
     { id: 'positionMemory', category: 'memory', minLevel: 11, weight: 3, difficulty: 4, minDuration: 1.5, nameKey: 'task.positionMemory.name', inputs: ['pointer', 'keyboard'], rules: ['finalLine'], modifiers: ['mirrored', 'decoy'], create: () => new TaskPositionMemory() },
     { id: 'countSymbols', category: 'visual', minLevel: 5, weight: 4, difficulty: 2, minDuration: 1.3, nameKey: 'task.count.name', inputs: ['pointer', 'keyboard'], rules: ['ignoreRed', 'finalLine', 'oddWait', 'emojiLiteral'], modifiers: ALL_GRID_MODIFIERS, create: () => new TaskCountSymbols() },
-    { id: 'yesNo', category: 'language', minLevel: 8, weight: 3, difficulty: 3, minDuration: 1.2, nameKey: 'task.yesNo.name', inputs: ['pointer', 'keyboard'], rules: ['invert', 'ignoreRed', 'finalLine', 'oddWait'], modifiers: ALL_GRID_MODIFIERS, create: () => new TaskYesNo() }
+    { id: 'yesNo', category: 'language', minLevel: 8, weight: 3, difficulty: 3, minDuration: 1.2, nameKey: 'task.yesNo.name', inputs: ['pointer', 'keyboard'], rules: ['invert', 'ignoreRed', 'finalLine', 'oddWait'], modifiers: ALL_GRID_MODIFIERS, create: () => new TaskYesNo() },
+    { id: 'directionConflict', category: 'inhibition', minLevel: 11, weight: 3.4, difficulty: 3, minDuration: 1.4, nameKey: 'task.direction.name', inputs: ['pointer', 'keyboard'], rules: ['invert', 'finalLine', 'oddWait'], modifiers: ['delayed', 'shrinking', 'decoy', 'swap'], create: () => new TaskDirectionConflict() },
+    { id: 'mentalMath', category: 'arithmetic', minLevel: 12, weight: 3.6, difficulty: 3, minDuration: 1.3, nameKey: 'task.mentalMath.name', inputs: ['pointer', 'keyboard'], rules: ['invert', 'ignoreRed', 'finalLine', 'oddWait'], modifiers: ALL_GRID_MODIFIERS, create: () => new TaskMentalMath() },
+    { id: 'missingItem', category: 'memory', minLevel: 13, weight: 3.2, difficulty: 4, minDuration: 1.6, nameKey: 'task.missing.name', inputs: ['pointer', 'keyboard'], rules: ['finalLine', 'oddWait'], modifiers: ['mirrored', 'shrinking', 'decoy'], create: () => new TaskMissingItem() },
+    { id: 'reverseSequence', category: 'sequence', minLevel: 16, weight: 3.2, difficulty: 4, minDuration: 1.7, nameKey: 'task.reverse.name', inputs: ['pointer', 'keyboard'], rules: ['finalLine', 'oddWait'], modifiers: ['mirrored', 'shrinking', 'decoy'], create: () => new TaskReverseSequence() },
+    { id: 'countByRule', category: 'visual', minLevel: 17, weight: 3.5, difficulty: 4, minDuration: 1.5, nameKey: 'task.countRule.name', inputs: ['pointer', 'keyboard'], rules: ['ignoreRed', 'finalLine', 'oddWait'], modifiers: ALL_GRID_MODIFIERS, create: () => new TaskCountByRule() },
+    { id: 'oppositePosition', category: 'memory', minLevel: 18, weight: 3.1, difficulty: 4, minDuration: 1.6, nameKey: 'task.opposite.name', inputs: ['pointer', 'keyboard'], rules: ['finalLine', 'oddWait'], modifiers: ['shrinking', 'decoy'], create: () => new TaskOppositePosition() },
+    { id: 'changingAnswer', category: 'deception', minLevel: 19, weight: 3.2, difficulty: 4, minDuration: 1.6, nameKey: 'task.changing.name', inputs: ['pointer', 'keyboard'], rules: ['finalLine', 'oddWait'], modifiers: ['mirrored', 'shrinking', 'decoy'], create: () => new TaskChangingAnswer() },
+    { id: 'doubleCondition', category: 'inhibition', minLevel: 21, weight: 3.4, difficulty: 5, minDuration: 1.5, nameKey: 'task.double.name', inputs: ['pointer', 'keyboard'], rules: ['finalLine', 'oddWait'], modifiers: ALL_GRID_MODIFIERS, create: () => new TaskDoubleCondition() },
+    { id: 'ruleSwitch', category: 'inhibition', minLevel: 23, weight: 3.1, difficulty: 5, minDuration: 1.7, nameKey: 'task.ruleSwitch.name', inputs: ['pointer', 'keyboard'], rules: ['finalLine', 'oddWait'], modifiers: ['mirrored', 'shrinking', 'decoy'], create: () => new TaskRuleSwitch() },
+    { id: 'nBack', category: 'memory', minLevel: 25, weight: 3.0, difficulty: 5, minDuration: 1.4, nameKey: 'task.nBack.name', inputs: ['pointer', 'keyboard'], rules: ['invert', 'ignoreRed', 'finalLine', 'oddWait'], modifiers: ['mirrored', 'shrinking', 'decoy', 'swap'], eligible: () => allowedNBackDepth() > 0, create: () => new TaskNBack() },
+    { id: 'previousRuleRecall', category: 'memory', minLevel: 26, weight: 2.8, difficulty: 5, minDuration: 1.4, nameKey: 'task.previousRule.name', inputs: ['pointer', 'keyboard'], rules: ['ignoreRed', 'finalLine', 'oddWait'], modifiers: ['mirrored', 'shrinking', 'decoy', 'swap'], eligible: () => ['color', 'side', 'parity'].some((key) => taskMemory.completed?.at(-1)?.[key]), create: () => new TaskPreviousRuleRecall() },
+    { id: 'delayedRecall', category: 'memory', minLevel: 26, weight: 2.7, difficulty: 5, minDuration: 1.5, nameKey: 'task.delayedRecall.name', inputs: ['pointer', 'keyboard'], rules: ['ignoreRed', 'finalLine', 'oddWait', 'emojiLiteral'], modifiers: ['mirrored', 'shrinking', 'decoy'], eligible: () => !taskMemory.pendingRecall || completedTaskCount >= taskMemory.pendingRecall.dueAt, create: () => new TaskDelayedRecall() }
 ];
 
 const MODIFIER_DEFINITIONS = {
@@ -1619,12 +1963,14 @@ function weightedChoice(items) {
 }
 
 function getTaskCandidateWeights() {
+    const recallDue = taskMemory.pendingRecall && completedTaskCount >= taskMemory.pendingRecall.dueAt;
     return TASK_REGISTRY.filter((definition) => (
         level >= definition.minLevel &&
         timeLeft >= definition.minDuration &&
         definition.id !== taskHistory.at(-1) &&
         (!definition.eligible || definition.eligible()) &&
-        (!activeGlobalRule || definition.rules.includes(activeGlobalRule.id))
+        (!activeGlobalRule || definition.rules.includes(activeGlobalRule.id)) &&
+        (!recallDue || definition.id === 'delayedRecall')
     )).map((definition) => {
         let selectionWeight = definition.weight;
         const recentIndex = [...taskHistory].reverse().indexOf(definition.id);
@@ -1683,7 +2029,7 @@ function applyModifiers(task, modifiers) {
 
 function prepareGlobalRule() {
     const band = currentDifficultyBand();
-    if (activeGlobalRule || completedTaskCount < 10 || Math.random() > band.globalChance) return false;
+    if (activeGlobalRule || taskMemory.pendingRecall || completedTaskCount < 10 || Math.random() > band.globalChance) return false;
     const possible = GLOBAL_RULES.filter((rule) => level >= rule.minLevel && TASK_REGISTRY.some((task) => task.rules.includes(rule.id) && level >= task.minLevel && timeLeft >= task.minDuration));
     if (!possible.length) return false;
     const rule = possible[randomInt(0, possible.length - 1)];
@@ -1876,7 +2222,7 @@ function cleanSessionRuntime() {
     packageQueue = [];
     taskHistory = [];
     categoryHistory = [];
-    taskMemory = {};
+    taskMemory = freshTaskMemory();
     audio.stopAll();
     sequenceContainer.replaceChildren();
     announcement.classList.remove('visible');
